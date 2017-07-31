@@ -1,4 +1,4 @@
-##Open your Intellij IDEA Projects From Command Line(both gradle & maven supported)
+##Open your Intellij IDEA Projects From Command Line(both gradle & maven supported)    
 Suppose your gradle demo project workspace is: /Users/{mac user name}/Projects/Java-Projects/demo
 You can open this project by commands below: 
 - sh idea
