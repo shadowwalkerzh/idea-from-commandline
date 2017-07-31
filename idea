@@ -1,0 +1,94 @@
+#!/bin/sh
+
+# check for where the latest version of IDEA is installed
+IDEA=`ls -1d /Applications/IntelliJ\ * | tail -n1`
+FINAL_PATH=`pwd`
+
+#demo build.gradle mac absolute path: /Users/{mac user name}/Projects/Java-Projects/demo
+
+BASE_URL="{your basic workspace}/Projects/"
+PROJECT_DEFAULT="{default project}"  # Java-Projects/demo
+PROJECT_DIR1="Java-Projects/"
+PROJECT_DIR1="Docker-Projects/"
+PROJECT_DIR1="Others/"
+
+#if there is no argument, open default project
+if [ $# -eq 0 ]; then
+    FINAL_PATH="$BASE_URL$PROJECT_DEFAULT"
+    echo "You specified no project, so open the default project:$FINAL_PATH"
+    open -a "$IDEA" "$FINAL_PATH"
+elif [ $# -eq 1 ]; then
+    echo "One argument specified:$1"
+
+    # If first argument was a file
+    if [ -f "$1" ]; then
+        echo "Open project: $1"
+        open -a "$IDEA" "$1"
+    else    # If first argument was a directory
+        if [ "default" == "$1" ]; then                       #If first argument was 'default', open guardian
+            FINAL_PATH="$BASE_URL$PROJECT_DEFAULT"
+        else                                            #If the first argument was not a special tag
+            FINAL_PATH="$1"
+        fi
+
+        # let's check for stuff in our working directory.
+        pushd "$FINAL_PATH" > /dev/null
+
+        if [ -d ".idea" ]; then
+            open -a "$IDEA" "$FINAL_PATH"
+        elif [ -f *.ipr ]; then
+            open -a "$IDEA" "$FINAL_PATH" `ls -1d *.ipr | head -n1`
+        elif [ -f pom.xml ]; then
+            echo "Open project: $FINAL_PATH pom.xml"
+            open -a "$IDEA" "$FINAL_PATH" "pom.xml"
+        elif [ -f build.gradle ]; then
+            echo "Open project: $FINAL_PATH build.gradle"
+            open -a "$IDEA" "$FINAL_PATH" "build.gradle"
+        else
+            open "$IDEA"
+        fi
+
+        popd > /dev/null
+    fi
+elif [ $# -eq 2 ]; then
+    echo "Two arguments specified, first: $1, second: $2"
+
+    #If 2 arguments specified, the first one must be a directory path, the second one can be a directory or a file path
+    if [ "backend" == "$1" ]; then
+        FINAL_PATH="$BASE_URL$PROJECT_DIR1"
+    elif [ "docker" == "$1" ]; then
+        FINAL_PATH="$BASE_URL$PROJECT_DIR2"
+    elif [ "others" == "$1" ]; then
+        FINAL_PATH="$BASE_URL$PROJECT_DIR3"
+    else
+        FINAL_PATH="$1"
+    fi
+
+    # If first argument was a file
+    if [ -f "$FINAL_PATH$2" ]; then
+        echo "Open project: $FINAL_PATH$2"
+        open -a "$IDEA" "$FINAL_PATH" "$2"
+    else
+        FINAL_PATH="$FINAL_PATH$2"
+        pushd "$FINAL_PATH" > /dev/null
+
+        if [ -d ".idea" ]; then
+            open -a "$IDEA" "$FINAL_PATH"
+        elif [ -f *.ipr ]; then
+            open -a "$IDEA" "$FINAL_PATH" `ls -1d *.ipr | head -n1`
+        elif [ -f pom.xml ]; then
+            echo "Open project: $FINAL_PATH pom.xml"
+            open -a "$IDEA" "$FINAL_PATH" "pom.xml"
+        elif [ -f build.gradle ]; then
+            echo "Open project: $FINAL_PATH build.gradle"
+            open -a "$IDEA" "$FINAL_PATH" "build.gradle"
+        else
+            open "$IDEA"
+        fi
+
+        popd > /dev/null
+    fi
+
+else
+    open "$IDEA"
+fi
