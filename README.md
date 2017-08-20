@@ -8,7 +8,7 @@ You can open this project by commands below:
 - sh PROJECT_DIR1 demo
 - sh PROJECT_DIR1 demo/build.gradle
 
-Tips: If you develop your projects based on MAC OS and your script path is "~/.ssh/idea", add
+Tips: If you develop your projects on MAC OS X and your script path is "~/.ssh/idea", add
 ```
 alias idea='sh ~/.ssh/idea'
 ```
